@@ -13,5 +13,11 @@ export default defineConfig(
         'react/no-unknown-property': 'off',
       },
     },
+    {
+      ignores: ['out/**/*'],
+    },
+    {
+      ignores: ['**/*.typeface.json'],
+    },
   ],
 )

@@ -2,4 +2,5 @@
 
 ---
 
-1. Floating MacBook
+1. [Floating MacBook](https://r3f-100-exercises.vercel.app/1)
+2. [Circular Carousel](https://r3f-100-exercises.vercel.app/2)
