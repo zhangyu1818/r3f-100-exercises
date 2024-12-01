@@ -12,6 +12,9 @@ export default function Home() {
       <Link className='text-2xl underline' href='/3'>
         Exercise 3 - Video Reflection
       </Link>
+      <Link className='text-2xl underline' href='/4'>
+        Exercise 4 - 3D Card
+      </Link>
     </div>
   )
 }
