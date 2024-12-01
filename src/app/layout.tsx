@@ -1,20 +1,6 @@
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
-
-import { clsx } from 'clsx'
 
 import './globals.css'
-
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-})
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-})
 
 export const metadata: Metadata = {
   description: 'React Three Fiber Exercises',
@@ -28,16 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body
-        className={clsx(
-          geistSans.variable,
-          geistMono.variable,
-          'antialiased',
-          'h-svh w-svw',
-        )}
-      >
-        {children}
-      </body>
+      <body className='h-svh w-svw antialiased'>{children}</body>
     </html>
   )
 }
