@@ -8,33 +8,40 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className='size-full'>
       <Canvas camera={{ fov: 25, position: [0, 0, 15] }}>
+        <color args={['black']} attach='background' />
         <ambientLight intensity={0.5} />
-        <Environment background blur={0.75}>
+        <spotLight
+          angle={0.28}
+          intensity={180}
+          penumbra={0.5}
+          position={[-2, 3, 3]}
+        />
+        <Environment background blur={1} resolution={256}>
           <color args={['black']} attach='background' />
           <Lightformer
             color='white'
-            intensity={2}
+            intensity={0.2}
             position={[0, -1, 5]}
             rotation={[0, 0, Math.PI / 4]}
             scale={[100, 0.1, 1]}
           />
           <Lightformer
             color='white'
-            intensity={3}
+            intensity={0.5}
             position={[-1, -1, 1]}
             rotation={[0, 0, Math.PI / 4]}
             scale={[100, 0.1, 1]}
           />
           <Lightformer
             color='white'
-            intensity={3}
+            intensity={1}
             position={[1, 1, 1]}
             rotation={[0, 0, Math.PI / 4]}
             scale={[100, 0.1, 1]}
           />
           <Lightformer
             color='white'
-            intensity={10}
+            intensity={2}
             position={[-10, 0, 14]}
             rotation={[0, Math.PI / 2, Math.PI / 4]}
             scale={[100, 10, 1]}

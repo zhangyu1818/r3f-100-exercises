@@ -5,6 +5,7 @@ import { useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 import {
+  Image,
   PerspectiveCamera,
   RenderTexture,
   Text,
@@ -45,6 +46,7 @@ type CardHolderGLTF = GLTF & {
   materials: unknown
   nodes: {
     card: THREE.Mesh
+    content: THREE.Mesh
     holder: THREE.Mesh
     mask: THREE.Mesh
     ring: THREE.Mesh
@@ -197,7 +199,6 @@ export default function Page() {
             dispose={null}
             position={[-0.02, 0.55, -0.1]}
             rotation-x={Math.PI / 2}
-            scale={23}
             onPointerDown={(event) => {
               if (card.current) {
                 // @ts-expect-error I don't know the correct type
@@ -219,90 +220,81 @@ export default function Page() {
               event.target.releasePointerCapture(event.pointerId)
             }}
           >
-            <group position={[0, 0, 0.031]}>
-              <mesh
-                geometry={nodes.card.geometry}
-                position={[0.001, 0.003, -0.008]}
-                scale={[6.9, 6.772, 10.543]}
-              >
-                <meshStandardMaterial>
+            <group position={[0.015, 0, 0.1]}>
+              <mesh geometry={nodes.top.geometry}>
+                <meshStandardMaterial
+                  color='#3A1800'
+                  metalness={0.1}
+                  roughness={0.8}
+                />
+              </mesh>
+              <mesh geometry={nodes.ring.geometry}>
+                <meshStandardMaterial
+                  color='#2C2C2C'
+                  metalness={0.8}
+                  roughness={0.4}
+                />
+              </mesh>
+              <mesh geometry={nodes.holder.geometry}>
+                <meshStandardMaterial
+                  color='#4A2000'
+                  metalness={0.1}
+                  roughness={0.8}
+                />
+              </mesh>
+              <mesh geometry={nodes.card.geometry}>
+                <meshStandardMaterial color='#222' />
+              </mesh>
+              <mesh geometry={nodes.content.geometry}>
+                <meshPhysicalMaterial
+                  clearcoat={0.7}
+                  clearcoatRoughness={0.1}
+                  ior={1.49}
+                  metalness={0}
+                  roughness={1}
+                >
                   <RenderTexture attach='map'>
-                    <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-                    <color args={['black']} attach='background' />
+                    <PerspectiveCamera makeDefault position={[0, 0, 15]} />
+                    <color args={['#222']} attach='background' />
                     <group
                       position={[0, 0, 0]}
                       rotation-y={Math.PI}
                       rotation-z={Math.PI}
-                      scale={[0.3, 0.15, 0.3]}
+                      scale-y={0.78}
                     >
-                      <Text fontSize={2} fontWeight={700} position-y={-1}>
+                      <Image
+                        transparent
+                        position={[0, 4, 0]}
+                        radius={2}
+                        rotation-y={Math.PI}
+                        rotation-z={Math.PI * 2}
+                        scale={4}
+                        url='/4/avatar.jpeg'
+                      />
+                      <Text
+                        color='#a3a3a3'
+                        fontSize={2}
+                        fontWeight={700}
+                        position-y={-1}
+                      >
                         ZHANGYU
                       </Text>
-                      <Text fontWeight={600} position-y={-3}>
+                      <Text color='#999' fontWeight={600} position-y={-3}>
                         @zhangyu1818
                       </Text>
                     </group>
                   </RenderTexture>
-                </meshStandardMaterial>
-              </mesh>
-              <mesh
-                geometry={nodes.holder.geometry}
-                position={[0.001, 0.003, -0.008]}
-                scale={[6.9, 6.772, 10.543]}
-              >
-                <meshStandardMaterial
-                  color='#222'
-                  metalness={0.2}
-                  roughness={0.8}
-                />
-              </mesh>
-              <mesh
-                geometry={nodes.mask.geometry}
-                position={[0.001, 0.004, -0.008]}
-                scale={[6.9, 6.772, 10.543]}
-              >
-                <meshPhysicalMaterial
-                  transparent
-                  clearcoat={1}
-                  clearcoatRoughness={0.1}
-                  envMapIntensity={1.5}
-                  metalness={1}
-                  opacity={0.1}
-                  reflectivity={0.9}
-                  roughness={0.1}
-                />
-              </mesh>
-              <mesh
-                geometry={nodes.ring.geometry}
-                position={[0.001, 0.0048, -0.064]}
-                rotation={[-0.192, 0, 0]}
-                scale={[1.253, 1.006, 1.03]}
-              >
-                <meshStandardMaterial
-                  color='#666'
-                  envMapIntensity={1.2}
-                  metalness={0.6}
-                  roughness={0.3}
-                />
-              </mesh>
-              <mesh
-                geometry={nodes.top.geometry}
-                position={[0.001, 0.004, -0.008]}
-              >
-                <meshStandardMaterial
-                  color='#333'
-                  metalness={0.3}
-                  roughness={0.7}
-                />
+                </meshPhysicalMaterial>
               </mesh>
             </group>
           </group>
+          <color args={['black']} attach='background' />
         </RigidBody>
       </group>
       <mesh ref={band}>
         <meshLineGeometry />
         <meshLineMaterial
-          color='#454545'
+          color='#565656'
           depthTest={false}
           lineWidth={1}
           map={braidedTexture}
