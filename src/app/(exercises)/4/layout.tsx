@@ -4,9 +4,11 @@ import { Environment, Lightformer } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { Physics } from '@react-three/rapier'
 
+import { DefaultLayout } from '@/components/layout'
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='size-full'>
+    <DefaultLayout date='2024年12月1日'>
       <Canvas camera={{ fov: 25, position: [0, 0, 15] }}>
         <color args={['black']} attach='background' />
         <ambientLight intensity={0.5} />
@@ -49,6 +51,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Environment>
         <Physics gravity={[0, -40, 0]}>{children}</Physics>
       </Canvas>
-    </div>
+    </DefaultLayout>
   )
 }

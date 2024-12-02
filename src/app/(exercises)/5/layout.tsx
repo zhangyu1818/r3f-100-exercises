@@ -9,11 +9,7 @@ import { DefaultLayout } from '@/components/layout'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <DefaultLayout
-      date='2024年12月2日'
-      message='Scroll Up & Down'
-      sourceCodeCount={5}
-    >
+    <DefaultLayout date='2024年12月2日' message='Scroll Up & Down'>
       <Canvas camera={{ fov: 45, position: [0, 5, 30] }}>
         <Perf />
         <ScrollControls infinite pages={5}>

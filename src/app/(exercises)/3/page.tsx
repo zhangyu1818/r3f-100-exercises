@@ -7,6 +7,9 @@ import * as THREE from 'three'
 import { Reflector, Text, useTexture, useVideoTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
+/**
+ * Inspired by https://codesandbox.io/p/sandbox/bfplr
+ */
 export default function Page() {
   const [vec] = useState(() => new THREE.Vector3())
 

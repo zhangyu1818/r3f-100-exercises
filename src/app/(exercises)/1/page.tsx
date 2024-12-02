@@ -7,16 +7,22 @@ import { Canvas } from '@react-three/fiber'
 
 import { clsx } from 'clsx'
 
+import { DefaultLayout } from '@/components/layout'
+
 import { MacBook } from './macbook'
 
+/**
+ * Inspired by https://codesandbox.io/p/sandbox/q23sw
+ */
 export default function Page() {
   const [open, setOpen] = useState(false)
   return (
-    <div
+    <DefaultLayout
       className={clsx(
-        'size-full transition-colors duration-700',
+        'transition-colors duration-700',
         open ? 'bg-orange-400' : 'bg-zinc-50',
       )}
+      date='2024年11月30日'
     >
       <p
         className={clsx(
@@ -53,6 +59,6 @@ export default function Page() {
           scale={1.2}
         />
       </Canvas>
-    </div>
+    </DefaultLayout>
   )
 }
