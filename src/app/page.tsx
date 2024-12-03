@@ -9,6 +9,8 @@ export default function Home() {
         'Exercise 3 - Video Reflection',
         'Exercise 4 - 3D Card',
         'Exercise 5 - Ring Shaped Card',
+        'Exercise 6 - Infinite Falling Blocks',
+        'Exercise 7 - Shader Banner',
       ].map((title, index) => (
         <Link key={title} className='text-2xl underline' href={`/${index + 1}`}>
           {title}
