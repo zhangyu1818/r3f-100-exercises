@@ -1,13 +1,13 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import * as THREE from 'three'
 
 import { useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
-import { useControls } from 'leva'
+import { Pane } from 'tweakpane'
 
 import fragmentShader from './shaders/fragment.glsl'
 import vertexShader from './shaders/vertex.glsl'
@@ -18,34 +18,14 @@ import vertexShader from './shaders/vertex.glsl'
 export default function Page() {
   const material = useRef<THREE.RawShaderMaterial>(null)
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const { frequencyX, frequencyY } = useControls({
-    frequencyX: {
-      max: 500,
-      min: 0,
-      step: 1,
-      value: 10,
-      onChange(value) {
-        material.current!.uniforms.frequency.value.x = value
-      },
-    },
-    frequencyY: {
-      max: 500,
-      min: 0,
-      step: 1,
-      value: 5,
-      onChange(value) {
-        material.current!.uniforms.frequency.value.y = value
-      },
-    },
-  })
+  const frequency = useMemo(() => new THREE.Vector2(10, 5), [])
 
-  const defaultFrequency = useMemo(
-    () => new THREE.Vector2(frequencyX, frequencyY),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  )
+  useEffect(() => {
+    const pane = new Pane()
+    pane.addBinding(material.current!.uniforms.frequency, 'value', {
+      label: 'Frequency',
+    })
+  }, [])
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime()
@@ -62,7 +42,7 @@ export default function Page() {
         fragmentShader={fragmentShader}
         side={THREE.DoubleSide}
         uniforms={{
-          frequency: { value: defaultFrequency },
+          frequency: { value: frequency },
           texture: { value: texture },
           time: { value: 0 },
         }}
