@@ -243,7 +243,7 @@ export default function Page() {
                 />
               </mesh>
               <mesh geometry={nodes.card.geometry}>
-                <meshStandardMaterial color='#222' />
+                <meshStandardMaterial color='#000' />
               </mesh>
               <mesh geometry={nodes.content.geometry}>
                 <meshPhysicalMaterial
@@ -255,7 +255,7 @@ export default function Page() {
                 >
                   <RenderTexture attach='map'>
                     <PerspectiveCamera makeDefault position={[0, 0, 15]} />
-                    <color args={['#222']} attach='background' />
+                    <color args={['#000']} attach='background' />
                     <group
                       position={[0, 0, 0]}
                       rotation-y={Math.PI}
