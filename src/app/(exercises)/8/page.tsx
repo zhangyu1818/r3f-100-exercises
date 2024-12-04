@@ -140,6 +140,10 @@ export default function Page() {
     pane.addBinding(material.current!, 'wireframe', {
       label: 'Wireframe',
     })
+
+    return () => {
+      pane.dispose()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

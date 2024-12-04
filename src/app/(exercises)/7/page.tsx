@@ -25,6 +25,9 @@ export default function Page() {
     pane.addBinding(material.current!.uniforms.frequency, 'value', {
       label: 'Frequency',
     })
+    return () => {
+      pane.dispose()
+    }
   }, [])
 
   useFrame((state) => {
