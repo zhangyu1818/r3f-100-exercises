@@ -5,9 +5,8 @@ import { useState } from 'react'
 import { ContactShadows, Environment, OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 
-import { clsx } from 'clsx'
-
 import { DefaultLayout } from '@/components/layout'
+import { clsx } from 'clsx'
 
 import { MacBook } from './macbook'
 
@@ -22,17 +21,17 @@ export default function Page() {
         'transition-colors duration-700',
         open ? 'bg-orange-400' : 'bg-zinc-50',
       )}
-      date='2024年11月30日'
+      date="2024年11月30日"
     >
       <p
         className={clsx(
-          'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[72px] font-bold text-black transition-opacity',
+          'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[72px] font-bold text-black transition-opacity',
           open ? 'opacity-0' : 'opacity-100',
         )}
       >
         Click ⬇️
       </p>
-      <Canvas camera={{ fov: 30, position: [0, 0, 1] }} className='touch-none'>
+      <Canvas camera={{ fov: 30, position: [0, 0, 1] }} className="touch-none">
         <OrbitControls
           enablePan={false}
           enableZoom={false}
@@ -51,7 +50,7 @@ export default function Page() {
             setOpen(!open)
           }}
         />
-        <Environment preset='city' />
+        <Environment preset="city" />
         <ContactShadows
           blur={1.5}
           opacity={0.6}

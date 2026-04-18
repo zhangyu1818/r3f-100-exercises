@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 body {
   color: #fff;
@@ -9,4 +7,20 @@ body {
 
 div.tp-dfwv {
   width: fit-content;
+}
+
+.stats-gl-top-left,
+.stats-gl-top-right {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  z-index: 40;
+}
+
+.stats-gl-top-left {
+  left: 0;
+}
+
+.stats-gl-top-right {
+  right: 0;
 }

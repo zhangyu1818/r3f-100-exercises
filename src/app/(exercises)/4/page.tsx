@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { useRef, useState, type RefObject } from 'react'
 
 import * as THREE from 'three'
 
@@ -17,8 +17,7 @@ import {
   extend,
   useFrame,
   useThree,
-  type MaterialNode,
-  type Object3DNode,
+  type ThreeElement,
 } from '@react-three/fiber'
 import {
   BallCollider,
@@ -37,8 +36,8 @@ extend({ MeshLineGeometry, MeshLineMaterial })
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
-    meshLineGeometry: Object3DNode<MeshLineGeometry, typeof MeshLineGeometry>
-    meshLineMaterial: MaterialNode<MeshLineMaterial, typeof MeshLineMaterial>
+    meshLineGeometry: ThreeElement<typeof MeshLineGeometry>
+    meshLineMaterial: ThreeElement<typeof MeshLineMaterial>
   }
 }
 
@@ -77,16 +76,36 @@ export default function Page() {
   const joint3 = useRef<RapierRigidBody>(null)
 
   const card = useRef<RapierRigidBody>(null)
+  const fixedJointRef = fixed as RefObject<RapierRigidBody>
+  const joint1Ref = joint1 as RefObject<RapierRigidBody>
+  const joint2Ref = joint2 as RefObject<RapierRigidBody>
+  const joint3Ref = joint3 as RefObject<RapierRigidBody>
+  const cardRef = card as RefObject<RapierRigidBody>
+  const vectorsRef = useRef<
+    [THREE.Vector3, THREE.Vector3, THREE.Vector3, THREE.Vector3] | null
+  >(null)
+  const curveRef = useRef<THREE.CatmullRomCurve3 | null>(null)
 
-  const [vec, ang, rot, dir] = useMemo(
-    () => [
+  if (!vectorsRef.current) {
+    vectorsRef.current = [
       new THREE.Vector3(),
       new THREE.Vector3(),
       new THREE.Vector3(),
       new THREE.Vector3(),
-    ],
-    [],
-  )
+    ]
+  }
+
+  if (!curveRef.current) {
+    curveRef.current = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+    ])
+  }
+
+  const [vec, ang, rot, dir] = vectorsRef.current
+  const curve = curveRef.current
 
   const [dragStart, setDragStart] = useState<false | THREE.Vector3>(false)
   const [hover, setHover] = useState(false)
@@ -95,26 +114,15 @@ export default function Page() {
 
   const { height, width } = useThree((state) => state.size)
 
-  const curve = useMemo(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-      ]),
-    [],
-  )
-
   // bind joints between the joints using rope joints
   // [0, 0, 0] anchor point on joint1 in local space
   // [0, 0, 0] anchor point on joint2 in local space
   // 1 is the max length, when length is greater than 1 it will create a spring effect
-  useRopeJoint(fixed, joint1, [[0, 0, 0], [0, 0, 0], 1])
-  useRopeJoint(joint1, joint2, [[0, 0, 0], [0, 0, 0], 1])
-  useRopeJoint(joint2, joint3, [[0, 0, 0], [0, 0, 0], 1])
+  useRopeJoint(fixedJointRef, joint1Ref, [[0, 0, 0], [0, 0, 0], 1])
+  useRopeJoint(joint1Ref, joint2Ref, [[0, 0, 0], [0, 0, 0], 1])
+  useRopeJoint(joint2Ref, joint3Ref, [[0, 0, 0], [0, 0, 0], 1])
 
-  useSphericalJoint(joint3, card, [
+  useSphericalJoint(joint3Ref, cardRef, [
     [0, 0, 0],
     [0, 1.45, 0],
   ])
@@ -165,7 +173,7 @@ export default function Page() {
     texture.wrapT = THREE.RepeatWrapping
   })
 
-  const { nodes } = useGLTF('/4/card.glb') as CardHolderGLTF
+  const { nodes } = useGLTF('/4/card.glb') as unknown as CardHolderGLTF
 
   const segmentProps = {
     angularDamping: 2,
@@ -178,7 +186,7 @@ export default function Page() {
   return (
     <>
       <group position={[0, 4, 0]}>
-        <RigidBody ref={fixed} {...segmentProps} type='fixed' />
+        <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody ref={joint1} {...segmentProps} position={[0.5, 0, 0]}>
           <BallCollider args={[0.1]} />
         </RigidBody>
@@ -223,27 +231,27 @@ export default function Page() {
             <group position={[0.015, 0, 0.1]}>
               <mesh geometry={nodes.top.geometry}>
                 <meshStandardMaterial
-                  color='#3A1800'
+                  color="#3A1800"
                   metalness={0.1}
                   roughness={0.8}
                 />
               </mesh>
               <mesh geometry={nodes.ring.geometry}>
                 <meshStandardMaterial
-                  color='#2C2C2C'
+                  color="#2C2C2C"
                   metalness={0.8}
                   roughness={0.4}
                 />
               </mesh>
               <mesh geometry={nodes.holder.geometry}>
                 <meshStandardMaterial
-                  color='#4A2000'
+                  color="#4A2000"
                   metalness={0.1}
                   roughness={0.8}
                 />
               </mesh>
               <mesh geometry={nodes.card.geometry}>
-                <meshStandardMaterial color='#000' />
+                <meshStandardMaterial color="#000" />
               </mesh>
               <mesh geometry={nodes.content.geometry}>
                 <meshPhysicalMaterial
@@ -253,9 +261,9 @@ export default function Page() {
                   metalness={0}
                   roughness={1}
                 >
-                  <RenderTexture attach='map'>
+                  <RenderTexture attach="map">
                     <PerspectiveCamera makeDefault position={[0, 0, 15]} />
-                    <color args={['#000']} attach='background' />
+                    <color args={['#000']} attach="background" />
                     <group
                       position={[0, 0, 0]}
                       rotation-y={Math.PI}
@@ -269,17 +277,17 @@ export default function Page() {
                         rotation-y={Math.PI}
                         rotation-z={Math.PI * 2}
                         scale={4}
-                        url='/4/avatar.jpeg'
+                        url="/4/avatar.jpeg"
                       />
                       <Text
-                        color='#a3a3a3'
+                        color="#a3a3a3"
                         fontSize={2}
                         fontWeight={700}
                         position-y={-1}
                       >
                         ZHANGYU
                       </Text>
-                      <Text color='#999' fontWeight={600} position-y={-3}>
+                      <Text color="#999" fontWeight={600} position-y={-3}>
                         @zhangyu1818
                       </Text>
                     </group>
@@ -288,19 +296,18 @@ export default function Page() {
               </mesh>
             </group>
           </group>
-          <color args={['black']} attach='background' />
+          <color args={['black']} attach="background" />
         </RigidBody>
       </group>
       <mesh ref={band}>
         <meshLineGeometry />
         <meshLineMaterial
-          color='#565656'
+          args={[{ resolution: new THREE.Vector2(width, height) }]}
+          color="#565656"
           depthTest={false}
           lineWidth={1}
           map={braidedTexture}
-          // @ts-expect-error type error
           repeat={[15, 1]}
-          // @ts-expect-error type error
           resolution={[width, height]}
           useMap={1}
         />

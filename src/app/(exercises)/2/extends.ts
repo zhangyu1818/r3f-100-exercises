@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-import { extend, type BufferGeometryNode } from '@react-three/fiber'
+import { extend, type ThreeElement } from '@react-three/fiber'
 
 // Paul West @prisoner849 https://discourse.threejs.org/u/prisoner849
 // https://discourse.threejs.org/t/simple-curved-plane/26647/10
@@ -41,9 +41,6 @@ extend({ BentPlaneGeometry })
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
-    bentPlaneGeometry: BufferGeometryNode<
-      BentPlaneGeometry,
-      typeof BentPlaneGeometry
-    >
+    bentPlaneGeometry: ThreeElement<typeof BentPlaneGeometry>
   }
 }

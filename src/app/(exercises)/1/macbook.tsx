@@ -7,7 +7,7 @@ import { useRef, useState } from 'react'
 import * as THREE from 'three'
 
 import { Html, useGLTF, useTexture } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, type ThreeElements } from '@react-three/fiber'
 
 import { animated, useSpring } from '@react-spring/three'
 import { twMerge } from 'tailwind-merge'
@@ -31,13 +31,13 @@ interface GLTFResult extends GLTF {
   }
 }
 
-type MacBookProps = JSX.IntrinsicElements['group'] & {
+type MacBookProps = ThreeElements['group'] & {
   open: boolean
 }
 
 export function MacBook(props: MacBookProps) {
   const { open, position, ...restProps } = props
-  const { nodes } = useGLTF('/1/mba.glb') as GLTFResult
+  const { nodes } = useGLTF('/1/mba.glb') as unknown as GLTFResult
   const [logoTexture] = useTexture(['/1/apple.png'])
 
   const groupRef = useRef<THREE.Group>(null)
@@ -112,7 +112,7 @@ export function MacBook(props: MacBookProps) {
           position={[0, -0.034, 0.105]}
         >
           <meshStandardMaterial
-            color='#000000'
+            color="#000000"
             metalness={0.1}
             roughness={0.1}
           />
@@ -125,16 +125,16 @@ export function MacBook(props: MacBookProps) {
           >
             <iframe
               className={twMerge(
-                'aspect-[3/2] w-[1600px] select-none rounded-t-[30px] bg-black transition-opacity opacity-0',
+                'aspect-[3/2] w-[1600px] rounded-t-[30px] bg-black opacity-0 transition-opacity select-none',
                 showScreen && 'opacity-100',
                 !open && 'opacity-0',
               )}
-              src='https://zhangyu.dev'
+              src="https://zhangyu.dev"
               style={{
                 clipPath:
                   'polygon(0 0,45% 0,45% 20px,calc(45% + 1px) 21px,calc(45% + 2px) 22px,calc(45% + 3px) 23px,calc(45% + 4px) 24px,calc(45% + 5px) 25px,calc(55% - 5px) 25px,calc(55% - 4px) 24px,calc(55% - 3px) 23px,calc(55% - 2px) 22px,calc(55% - 1px) 21px,55% 20px,55% 0,100% 0,100% 100%,0 100%)',
               }}
-              title='zhangyu.dev'
+              title="zhangyu.dev"
             />
           </Html>
         </mesh>
@@ -145,10 +145,10 @@ export function MacBook(props: MacBookProps) {
         geometry={nodes.keyboard.geometry}
         position={[0, 0.0012, 0]}
       >
-        <meshStandardMaterial color='#333333' metalness={0.2} roughness={0.5} />
+        <meshStandardMaterial color="#333333" metalness={0.2} roughness={0.5} />
       </mesh>
       <mesh castShadow receiveShadow geometry={nodes.racks.geometry}>
-        <meshBasicMaterial color='#333333' />
+        <meshBasicMaterial color="#333333" />
       </mesh>
     </group>
   )

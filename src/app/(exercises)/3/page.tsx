@@ -4,7 +4,12 @@ import { useState } from 'react'
 
 import * as THREE from 'three'
 
-import { Reflector, Text, useTexture, useVideoTexture } from '@react-three/drei'
+import {
+  MeshReflectorMaterial,
+  Text,
+  useTexture,
+  useVideoTexture,
+} from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 /**
@@ -34,30 +39,25 @@ export default function Page() {
 
   return (
     <group position-y={-0.5}>
-      <Reflector
-        args={[20, 20]}
-        blur={[400, 100]}
-        mirror={0.5}
-        mixBlur={6}
-        mixStrength={1.5}
-        resolution={512}
-        rotation={[-Math.PI / 2, 0, Math.PI / 2]}
-      >
-        {(Material, props) => (
-          <Material
-            color='#a0a0a0'
-            displacementMap={displacement}
-            metalness={0.4}
-            normalMap={normal}
-            roughnessMap={roughness}
-            {...props}
-          />
-        )}
-      </Reflector>
+      <mesh rotation={[-Math.PI / 2, 0, Math.PI / 2]}>
+        <planeGeometry args={[20, 20]} />
+        <MeshReflectorMaterial
+          blur={[400, 100]}
+          mirror={0.5}
+          mixBlur={6}
+          mixStrength={1.5}
+          resolution={512}
+          color="#a0a0a0"
+          displacementMap={displacement}
+          metalness={0.4}
+          normalMap={normal}
+          roughnessMap={roughness}
+        />
+      </mesh>
       <Text fontSize={3} fontWeight={900} position={[0, 1.2, -2]}>
         R3F100
         <meshStandardMaterial
-          emissive='white'
+          emissive="white"
           emissiveIntensity={4}
           emissiveMap={video}
           toneMapped={false}

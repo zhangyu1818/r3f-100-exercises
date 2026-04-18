@@ -1,6 +1,6 @@
 'use client'
 
-import { CameraShake } from '@react-three/drei'
+import { CameraShake, StatsGl } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { Physics } from '@react-three/rapier'
 
@@ -8,9 +8,10 @@ import { DefaultLayout } from '@/components/layout'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <DefaultLayout date='2024年12月2日'>
-      <Canvas shadows camera={{ fov: 45, position: [10, 10, 10] }}>
-        <color args={['lightpink']} attach='background' />
+    <DefaultLayout date="2024年12月2日">
+      <Canvas camera={{ fov: 45, position: [10, 10, 10] }} shadows="percentage">
+        <StatsGl className="stats-gl-top-left" />
+        <color args={['lightpink']} attach="background" />
         <ambientLight intensity={0.2} />
         <spotLight
           castShadow
@@ -21,8 +22,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           position={[8, 10, 5]}
           shadow-mapSize={[2048, 2048]}
         />
-        <fog args={['lightpink', 12, 25]} attach='fog' />
-        <Physics timeStep='vary'>{children}</Physics>
+        <fog args={['lightpink', 12, 25]} attach="fog" />
+        <Physics timeStep="vary">{children}</Physics>
         <CameraShake
           maxPitch={0.01}
           maxRoll={0.01}

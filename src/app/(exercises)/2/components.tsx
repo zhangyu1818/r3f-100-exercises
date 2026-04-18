@@ -2,12 +2,17 @@ import { useRef, useState } from 'react'
 
 import * as THREE from 'three'
 
-import { Image, useScroll, type ImageProps } from '@react-three/drei'
-import { useFrame, type GroupProps } from '@react-three/fiber'
+import { useScroll } from '@react-three/drei'
+import {
+  useFrame,
+  type ThreeElements,
+  type ThreeEvent,
+} from '@react-three/fiber'
 
+import { SpringImage, type SpringImageProps } from '@/components/spring-image'
 import { animated, useSpring } from '@react-spring/three'
 
-export const Rotate = (props: GroupProps) => {
+export const Rotate = (props: ThreeElements['group']) => {
   const groupRef = useRef<THREE.Group>(null)
   const scroll = useScroll()
 
@@ -19,11 +24,12 @@ export const Rotate = (props: GroupProps) => {
   return <group ref={groupRef} {...props} />
 }
 
-const AnimatedImage = animated(Image)
+const AnimatedImage = animated(SpringImage)
 
-export const Card = (props: ImageProps) => {
+type CardProps = Omit<SpringImageProps, 'children'>
+
+export const Card = (props: CardProps) => {
   const [hovered, setHovered] = useState(false)
-
   const { radius, scale, zoom } = useSpring({
     radius: hovered ? 0.2 : 0.1,
     scale: hovered ? 1.2 : 1,
@@ -32,22 +38,22 @@ export const Card = (props: ImageProps) => {
 
   return (
     <AnimatedImage
+      {...props}
       transparent
       material-radius={radius}
       material-zoom={zoom}
       scale={scale}
       side={THREE.DoubleSide}
-      onPointerEnter={(e) => {
+      onPointerEnter={(e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation()
         setHovered(true)
         document.body.style.cursor = 'pointer'
       }}
-      onPointerLeave={(e) => {
+      onPointerLeave={(e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation()
         setHovered(false)
         document.body.style.cursor = 'default'
       }}
-      {...props}
     >
       <bentPlaneGeometry args={[0.1, 1.1, 1.1, 16, 16]} />
     </AnimatedImage>
@@ -66,8 +72,7 @@ export const Carousel = (props: CarouselProps) => {
   )
   return images.map((url, index) => (
     <Card
-      // eslint-disable-next-line react/no-array-index-key
-      key={index}
+      key={url}
       position={[
         Math.sin((index / 10) * Math.PI * 2) * radius,
         0,

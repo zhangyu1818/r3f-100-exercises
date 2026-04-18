@@ -5,7 +5,7 @@ import { startTransition, useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 
 import { shaderMaterial } from '@react-three/drei'
-import { extend, useFrame, type MaterialNode } from '@react-three/fiber'
+import { extend, useFrame, type ThreeElement } from '@react-three/fiber'
 
 import { Pane } from 'tweakpane'
 
@@ -38,10 +38,7 @@ extend({ WaveShaderMaterial })
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
-    waveShaderMaterial: MaterialNode<
-      THREE.ShaderMaterial,
-      typeof WaveShaderMaterial
-    >
+    waveShaderMaterial: ThreeElement<typeof WaveShaderMaterial>
   }
 }
 
@@ -50,8 +47,9 @@ declare module '@react-three/fiber' {
  */
 export default function Page() {
   const material = useRef<THREE.ShaderMaterial>(null)
+  const paneState = useRef({ segments: 256 })
 
-  const [segments, setSegments] = useState(256)
+  const [segments, setSegments] = useState(paneState.current.segments)
 
   useFrame((state) => {
     const elapsedTime = state.clock.getElapsedTime()
@@ -125,7 +123,7 @@ export default function Page() {
     })
 
     pane
-      .addBinding({ segments }, 'segments', {
+      .addBinding(paneState.current, 'segments', {
         label: 'Segments',
         max: 1024,
         min: 1,
@@ -144,7 +142,6 @@ export default function Page() {
     return () => {
       pane.dispose()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <div className='flex h-screen flex-col items-center justify-center gap-4 text-black'>
+    <div className="flex h-screen flex-col items-center justify-center gap-4 text-black">
       {[
         'Exercise 1 - Floating MacBook',
         'Exercise 2 - Circular Carousel',
@@ -13,7 +13,7 @@ export default function Home() {
         'Exercise 7 - Shader Banner',
         'Exercise 8 - Raging Sea',
       ].map((title, index) => (
-        <Link key={title} className='text-2xl underline' href={`/${index + 1}`}>
+        <Link key={title} className="text-2xl underline" href={`/${index + 1}`}>
           {title}
         </Link>
       ))}

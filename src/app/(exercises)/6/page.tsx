@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 
 import * as THREE from 'three'
 
@@ -48,8 +48,10 @@ const reInitialBody = (body: RapierRigidBody) => {
 export default function Page() {
   const rigidBodies = useRef<RapierRigidBody[]>(null)
   const planeBody = useRef<RapierRigidBody>(null)
+  const instancesRef = useRef<InstancedRigidBodyProps[] | null>(null)
+  const colorsRef = useRef<Float32Array | null>(null)
 
-  const instances = useMemo(() => {
+  if (!instancesRef.current) {
     const instances: InstancedRigidBodyProps[] = []
 
     for (let i = 0; i < COUNT; i++) {
@@ -62,12 +64,13 @@ export default function Page() {
       })
     }
 
-    return instances
-  }, [])
+    instancesRef.current = instances
+  }
 
-  const colors = useMemo(() => {
+  if (!colorsRef.current) {
     const array = new Float32Array(COUNT * 3)
     const color = new THREE.Color()
+
     for (let i = 0; i < COUNT; i++)
       color
         .set(
@@ -77,8 +80,12 @@ export default function Page() {
         )
         .convertSRGBToLinear()
         .toArray(array, i * 3)
-    return array
-  }, [])
+
+    colorsRef.current = array
+  }
+
+  const instances = instancesRef.current
+  const colors = colorsRef.current
 
   useFrame((state) => {
     const xRotation = -Math.PI / 2 - state.pointer.y * 0.2
@@ -112,28 +119,27 @@ export default function Page() {
     <>
       <InstancedRigidBodies
         ref={rigidBodies}
-        colliders='cuboid'
+        colliders="cuboid"
         instances={instances}
       >
         <instancedMesh
           castShadow
           receiveShadow
-          // eslint-disable-next-line no-sparse-arrays
-          args={[, , COUNT]}
+          args={[undefined, undefined, COUNT]}
           count={COUNT}
         >
           <boxGeometry>
             <instancedBufferAttribute
               args={[colors, 3]}
-              attach='attributes-color'
+              attach="attributes-color"
             />
           </boxGeometry>
           <meshStandardMaterial vertexColors />
         </instancedMesh>
       </InstancedRigidBodies>
-      <RigidBody ref={planeBody} rotation-x={-Math.PI / 2} type='fixed'>
+      <RigidBody ref={planeBody} rotation-x={-Math.PI / 2} type="fixed">
         <RoundedBox receiveShadow args={[10, 10, 0.2]} radius={0.1}>
-          <meshStandardMaterial color='lightpink' metalness={0} roughness={1} />
+          <meshStandardMaterial color="lightpink" metalness={0} roughness={1} />
         </RoundedBox>
       </RigidBody>
     </>

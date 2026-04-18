@@ -7,7 +7,7 @@ import { DefaultLayout } from '@/components/layout'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <DefaultLayout date='2024年12月3日'>
+    <DefaultLayout date="2024年12月3日">
       <Canvas camera={{ position: [0, 0, 1] }}>
         <OrbitControls />
         {children}

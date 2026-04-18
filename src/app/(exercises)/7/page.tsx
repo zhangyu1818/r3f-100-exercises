@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import * as THREE from 'three'
 
@@ -17,8 +17,11 @@ import vertexShader from './shaders/vertex.glsl'
  */
 export default function Page() {
   const material = useRef<THREE.RawShaderMaterial>(null)
+  const frequency = useRef<THREE.Vector2 | null>(null)
 
-  const frequency = useMemo(() => new THREE.Vector2(10, 5), [])
+  if (!frequency.current) {
+    frequency.current = new THREE.Vector2(10, 5)
+  }
 
   useEffect(() => {
     const pane = new Pane()
@@ -45,7 +48,7 @@ export default function Page() {
         fragmentShader={fragmentShader}
         side={THREE.DoubleSide}
         uniforms={{
-          frequency: { value: frequency },
+          frequency: { value: frequency.current },
           texture: { value: texture },
           time: { value: 0 },
         }}

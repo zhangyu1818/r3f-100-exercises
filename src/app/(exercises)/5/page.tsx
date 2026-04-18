@@ -1,18 +1,13 @@
 'use client'
 
-import { startTransition, useMemo, useRef, useState } from 'react'
+import { startTransition, useRef, useState } from 'react'
 
 import * as THREE from 'three'
 
-import {
-  Image,
-  Text,
-  useCursor,
-  useScroll,
-  type ImageProps,
-} from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { Text, useCursor, useScroll } from '@react-three/drei'
+import { useFrame, type ThreeEvent } from '@react-three/fiber'
 
+import { SpringImage, type SpringImageProps } from '@/components/spring-image'
 import { animated, useSpring } from '@react-spring/three'
 import { chunk, shuffle } from 'lodash-es'
 import { nanoid } from 'nanoid'
@@ -22,8 +17,8 @@ interface ImageData {
   url: string
 }
 
-const AnimatedImage = animated(Image)
 const AnimatedText = animated(Text)
+const AnimatedImage = animated(SpringImage)
 
 const imageChunks = chunk(
   shuffle(
@@ -67,28 +62,22 @@ export default function Page() {
     state.events.update?.()
   })
 
-  const content = useMemo(
-    () =>
-      imageChunks.map((images, groupIndex) => {
-        const startAngle = groupIndex * (effectiveAnglePerGroup + groupGap)
-        return (
-          <ImageGroup
-            // eslint-disable-next-line react/no-array-index-key
-            key={groupIndex}
-            groupIndex={groupIndex}
-            images={images}
-            startAngle={startAngle}
-            onHover={setHoverImage}
-          />
-        )
-      }),
-    [],
-  )
-
   return (
     <>
       <group ref={groupRef} position={[0, -2, 0]}>
-        {content}
+        {imageChunks.map((images, groupIndex) => {
+          const startAngle = groupIndex * (effectiveAnglePerGroup + groupGap)
+
+          return (
+            <ImageGroup
+              key={images[0]?.id ?? `group-${startAngle}`}
+              groupIndex={groupIndex}
+              images={images}
+              startAngle={startAngle}
+              onHover={setHoverImage}
+            />
+          )
+        })}
       </group>
       <HoveredImage image={hoverImage} />
     </>
@@ -106,9 +95,9 @@ function ImageGroup(props: ImageGroupProps) {
   const { groupIndex, images, onHover, startAngle } = props
   const [hovered, setHovered] = useState<ImageData | null>(null)
 
-  const content = useMemo(
-    () =>
-      images.map((image, imageIndex) => {
+  return (
+    <group position-y={groupIndex * 0.4}>
+      {images.map((image, imageIndex) => {
         const distance = 12
         const angle =
           startAngle + (imageIndex * effectiveAnglePerGroup) / images.length
@@ -126,7 +115,7 @@ function ImageGroup(props: ImageGroupProps) {
             rotation-y={-angle}
             side={THREE.DoubleSide}
             url={image.url}
-            onPointerEnter={(e) => {
+            onPointerEnter={(e: ThreeEvent<PointerEvent>) => {
               startTransition(() => {
                 setHovered(image)
                 onHover(image)
@@ -141,54 +130,39 @@ function ImageGroup(props: ImageGroupProps) {
             }}
           />
         )
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [hovered?.id],
-  )
-
-  return (
-    <group key={groupIndex} position-y={groupIndex * 0.4}>
-      {content}
+      })}
     </group>
   )
 }
 
-type ImageCardProps = ImageProps & {
+type ImageCardProps = SpringImageProps & {
   active: boolean
   hovered: boolean
 }
 
-const defaultScale = [5.3, 3]
+const defaultScale: [number, number] = [5.3, 3]
 
 function ImageCard(props: ImageCardProps) {
   const { active, hovered, ...restProps } = props
-
-  const imageRef = useRef<THREE.Mesh>(null)
-
   const [defaultScaleX, defaultScaleY] = defaultScale
-
-  const { positionY, scaleX, scaleY } = useSpring({
+  const { positionY, scaleMultiplier } = useSpring({
     positionY: active ? 1.5 : 0,
-    scaleX: active
+    scaleMultiplier: active
       ? 1.3 * defaultScaleX
       : hovered
         ? 1.2 * defaultScaleX
         : defaultScaleX,
-    scaleY: active
-      ? 1.3 * defaultScaleY
-      : hovered
-        ? 1.2 * defaultScaleY
-        : defaultScaleY,
   })
 
   return (
     <AnimatedImage
-      ref={imageRef}
       {...restProps}
       position-y={positionY}
       radius={0.1}
-      scale-x={scaleX}
-      scale-y={scaleY}
+      scale={scaleMultiplier.to((scaleX) => [
+        scaleX,
+        (scaleX / defaultScaleX) * defaultScaleY,
+      ])}
       side={THREE.DoubleSide}
     />
   )
