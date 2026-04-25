@@ -13,6 +13,7 @@ export default function Home() {
         'Exercise 7 - Shader Banner',
         'Exercise 8 - Raging Sea',
         'Exercise 9 - Fluid Stretch',
+        'Exercise 10 - Elastic Blob',
       ].map((title, index) => (
         <Link
           key={title}
