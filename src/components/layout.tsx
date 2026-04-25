@@ -9,10 +9,19 @@ interface DefaultLayoutProps {
   className?: string
   date?: string
   message?: string
+  author?: string
+  authorLink?: string
 }
 
 export const DefaultLayout = (props: DefaultLayoutProps) => {
-  const { children, className, date, message } = props
+  const {
+    children,
+    className,
+    date,
+    message,
+    author = 'zhangyu1818',
+    authorLink = 'https://github.com/zhangyu1818',
+  } = props
   const sourceCodeCount = usePathname().split('/').at(-1)
   return (
     <div className={twMerge('size-full bg-zinc-100', className)}>
@@ -33,11 +42,11 @@ export const DefaultLayout = (props: DefaultLayoutProps) => {
         {date && <span className="block">{date}</span>}
         <Link
           className="underline"
-          href="https://github.com/zhangyu1818"
+          href={authorLink}
           rel="noreferrer"
           target="_blank"
         >
-          <small>zhangyu1818</small>
+          <small>{author}</small>
         </Link>
       </p>
       {children}

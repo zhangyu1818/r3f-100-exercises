@@ -1,0 +1,12 @@
+import { extend, type ThreeElement } from '@react-three/fiber'
+
+import { MeshLineGeometry, MeshLineMaterial } from 'meshline'
+
+extend({ MeshLineGeometry, MeshLineMaterial })
+
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    meshLineGeometry: ThreeElement<typeof MeshLineGeometry>
+    meshLineMaterial: ThreeElement<typeof MeshLineMaterial>
+  }
+}

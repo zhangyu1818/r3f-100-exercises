@@ -10,3 +10,5 @@
 6. [Infinite Falling Blocks](https://r3f-100-exercises.vercel.app/6)
 7. [Shader Banner](https://r3f-100-exercises.vercel.app/7)
 8. [Raging Sea](https://r3f-100-exercises.vercel.app/8)
+
+9. [Template 09](https://r3f-100-exercises.vercel.app/9)

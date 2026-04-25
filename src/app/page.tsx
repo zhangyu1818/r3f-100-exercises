@@ -12,8 +12,13 @@ export default function Home() {
         'Exercise 6 - Infinite Falling Blocks',
         'Exercise 7 - Shader Banner',
         'Exercise 8 - Raging Sea',
+        'Exercise 9 - Fluid Stretch',
       ].map((title, index) => (
-        <Link key={title} className="text-2xl underline" href={`/${index + 1}`}>
+        <Link
+          key={title}
+          className="text-2xl underline"
+          href={`/${index + 1}`}
+        >
           {title}
         </Link>
       ))}

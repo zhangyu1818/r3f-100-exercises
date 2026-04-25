@@ -1,14 +1,13 @@
 import { defineConfig } from '@zhangyu1818/oxlint-config'
 
 export default defineConfig({
-  ignorePatterns: ['out/**/*', '**/*.typeface.json'],
-  overrides: [
-    {
-      files: ['**/*.jsx', '**/*.tsx', '**/*.mtsx', '**/*.ctsx'],
-      rules: {
-        'max-lines': 'off',
-      },
-    },
+  ignorePatterns: [
+    'out/**/*',
+    'coverage/**/*',
+    '**/*.mdx',
+    '**/*.typeface.json',
+    '.claude/**/*',
+    '.agents/**/*',
   ],
   presets: {
     react: {
